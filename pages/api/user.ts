@@ -1,11 +1,14 @@
 import Iron from "@hapi/iron";
-import CookieService from "../../lib/cookie";
+import { Magic } from "@magic-sdk/admin";
+import Cookie from "../../lib/cookie";
+
+const magic = new Magic(process.env.MAGIC_SECRET_KEY);
 
 export default async (req, res) => {
   let user;
   try {
     user = await Iron.unseal(
-      CookieService.getAuthToken(req.cookies),
+      Cookie.getAuthToken(req.cookies),
       process.env.ENCRYPTION_SECRET,
       Iron.defaults
     );
@@ -13,5 +16,9 @@ export default async (req, res) => {
     res.status(401).end();
   }
 
-  res.json(user);
+  const userMetadata = await magic.users.getMetadataByIssuer(user.issuer);
+
+  console.log(userMetadata);
+
+  res.json(userMetadata);
 };

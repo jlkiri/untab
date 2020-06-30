@@ -9,18 +9,13 @@ export default function Home() {
           dangerouslySetInnerHTML={{
             __html: `
       if (document.cookie && document.cookie.includes('authed')) {
-        window.location.href = "/dashboard"
+        // window.location.href = "/dashboard"
       }
     `,
           }}
         />
       </Head>
-      <Link href="/login">
-        <a>LOGIN</a>
-      </Link>
-      <div>
-        EFJPEFEWFKPOEWPEWFPWKEPOFKPOWEFOJWEFMVPOEWJVOIEWJMFWEJFWMECPEWJFIEWFMCEWVJWOIMFIOJEW
-      </div>
+      <div>Welcome to Bookmark app!</div>
     </>
   );
 }
