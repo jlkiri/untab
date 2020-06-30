@@ -9,7 +9,7 @@ export default function Home() {
           dangerouslySetInnerHTML={{
             __html: `
       if (document.cookie && document.cookie.includes('authed')) {
-        // window.location.href = "/dashboard"
+        window.location.href = "/dashboard"
       }
     `,
           }}

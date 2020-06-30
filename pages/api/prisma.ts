@@ -4,12 +4,8 @@ const prisma = new PrismaClient();
 
 export default async (req, res) => {
   async function main() {
-    const post = await prisma.post.update({
-      where: { id: 1 },
-
-      data: { published: true },
-    });
-    return post;
+    const users = await prisma.user.findMany();
+    return users;
   }
 
   main()
@@ -24,5 +20,5 @@ export default async (req, res) => {
   const response = await main();
   console.dir(response);
 
-  res.status(200).end();
+  res.json(response);
 };

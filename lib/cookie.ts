@@ -1,7 +1,7 @@
 import { serialize } from "cookie";
 
 const TOKEN_NAME = "api_token";
-const MAX_AGE = 60 * 60 * 8;
+const MAX_AGE = 60 * 60 * 2;
 
 function createCookie(name, data, options = {}) {
   return serialize(name, data, {

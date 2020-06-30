@@ -1,5 +1,6 @@
 create table users (
-  id varchar primary key not null unique
+  id varchar primary key not null unique,
+  name varchar
 );
 
 create table bookmarks (
@@ -7,5 +8,5 @@ create table bookmarks (
   url varchar not null,
   label varchar,
   created_at TIMESTAMPTZ default now(),
-  user_id varchar references users
+  user_id varchar references users on delete cascade
 );
