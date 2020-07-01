@@ -1,34 +1,22 @@
-import { PrismaClient } from "@prisma/client";
 import { NowRequest, NowResponse } from "@vercel/node";
-import { protect } from "../../lib/protect";
-import { User } from "../../types/user";
+import { authorize } from "../../lib/protect";
+import { addBookmark } from "../../lib/db";
 
-const prisma = new PrismaClient();
+export default async (req: NowRequest, res: NowResponse) => {
+  let user;
 
-const handler = async (req: NowRequest, res: NowResponse, user: User) => {
+  try {
+    user = await authorize(req.cookies);
+  } catch {
+    res.status(401).end();
+  }
+
   const { label, url } = JSON.parse(req.body);
 
   try {
-    const bookmark = await prisma.bookmark.create({
-      data: {
-        url,
-        label,
-        user: {
-          connect: {
-            id: user.issuer,
-          },
-        },
-      },
-    });
-
+    const bookmark = await addBookmark(label, url, user);
     res.json(bookmark);
-  } catch (e) {
-    console.error(e);
-
-    await prisma.disconnect();
+  } catch {
     res.status(500).end();
   }
 };
-
-export default (req: NowRequest, res: NowResponse) =>
-  protect(req, res, handler);

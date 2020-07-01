@@ -1,25 +1,20 @@
-import { PrismaClient } from "@prisma/client";
 import { NowRequest, NowResponse } from "@vercel/node";
-import { protect } from "../../lib/protect";
+import { authorize } from "../../lib/protect";
+import { getBookmarks } from "../../lib/db";
 
-const prisma = new PrismaClient();
+export default async (req: NowRequest, res: NowResponse) => {
+  let user;
 
-const handler = async (req: NowRequest, res: NowResponse, user) => {
   try {
-    const bookmarks = await prisma.bookmark.findMany({
-      where: { userId: user.issuer },
-      orderBy: {
-        createdAt: "asc",
-      },
-    });
-    res.json(bookmarks);
-  } catch (e) {
-    console.error(e);
+    user = await authorize(req.cookies);
+  } catch {
+    res.status(401).end();
+  }
 
-    await prisma.disconnect();
+  try {
+    const bookmarks = await getBookmarks(user);
+    res.json(bookmarks);
+  } catch {
     res.status(500).end();
   }
 };
-
-export default (req: NowRequest, res: NowResponse) =>
-  protect(req, res, handler);

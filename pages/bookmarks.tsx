@@ -1,10 +1,46 @@
 import React, { useEffect } from "react";
+/* import { InferGetServerSidePropsType } from "next";
+import { GetServerSideProps } from "next";
+import { authorize } from "../lib/protect";
+import { parseCookies } from "nookies";
+import { getBookmarks } from "../lib/db";
+import { Bookmark } from "@prisma/client"; */
 import useSWR from "swr";
+import { fetcher } from "../lib/utils";
 
-const Bookmarks: React.FC = () => {
-  const [bks, setBks] = React.useState([]);
+/* type BookmarkProps = {
+  bookmarks?: Bookmark[];
+  error?: any;
+};
 
-  const removeBk = async (id) => {
+export const getServerSideProps: GetServerSideProps<BookmarkProps> = async (
+  context
+) => {
+  const cookies = parseCookies(context);
+  let user;
+
+  try {
+    user = authorize(cookies);
+  } catch {
+    return {
+      props: {
+        error: "NOT_AUTHORIZED",
+      },
+    };
+  }
+
+  const bookmarks = await getBookmarks(user);
+  return {
+    props: {
+      bookmarks,
+    },
+  };
+}; */
+
+const Bookmarks = () => {
+  const { data, error } = useSWR("/api/bookmarks", fetcher);
+
+  /* const removeBk = async (id) => {
     const response = await fetch("api/delete", {
       method: "POST",
       body: JSON.stringify({ id }),
@@ -14,27 +50,16 @@ const Bookmarks: React.FC = () => {
       console.log(`deleted ${id}`);
       setBks(bks.filter((bk) => bk.id !== id));
     }
-  };
+  }; */
 
-  const fetchBookmarks = async () => {
-    const response = await fetch("/api/bookmarks");
-    const bs = await response.json();
-    console.log(bs);
-    setBks(bs);
-  };
-
-  useEffect(() => {
-    fetchBookmarks();
-  }, []);
-
-  if (bks.length === 0) return null;
+  if (!data || data.length === 0) return null;
 
   return (
     <div>
-      {bks.map((bk) => (
+      {data.map((bk) => (
         <div>
           {bk.label} : {bk.url}
-          <button onClick={() => removeBk(bk.id)}>remove</button>
+          {/* <button onClick={() => removeBk(bk.id)}>remove</button> */}
         </div>
       ))}
     </div>

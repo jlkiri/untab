@@ -1,16 +1,21 @@
 import { NowRequest, NowResponse } from "@vercel/node";
-import { Magic } from "@magic-sdk/admin";
-import { protect } from "../../lib/protect";
+import { authorize } from "../../lib/protect";
+import { getUser } from "../../lib/db";
 
-const magic = new Magic(process.env.MAGIC_SECRET_KEY);
+export default async (req: NowRequest, res: NowResponse) => {
+  let user;
 
-const handler = async (req: NowRequest, res: NowResponse, user) => {
-  const userMetadata = await magic.users.getMetadataByIssuer(user.issuer);
+  try {
+    user = await authorize(req.cookies);
+  } catch {
+    res.status(401).end();
+  }
 
-  console.log(userMetadata);
-
-  res.json(userMetadata);
+  try {
+    const userData = await getUser(user);
+    res.json(userData);
+  } catch (e) {
+    console.error(e);
+    res.status(500).end();
+  }
 };
-
-export default (req: NowRequest, res: NowResponse) =>
-  protect(req, res, handler);

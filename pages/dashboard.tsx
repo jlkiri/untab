@@ -1,20 +1,19 @@
-import { GetStaticProps, GetServerSideProps } from "next";
 import * as React from "react";
-import { parseCookies } from "nookies";
-import { NowRequest, NowResponse } from "@vercel/node";
-import { Magic } from "@magic-sdk/admin";
-import { useUser } from "../hooks/useUser";
 import LogoutButton from "../components/LogoutButton";
 import { Protected } from "../components/Protected";
-import { protect, protectStatic } from "../lib/protect";
+import useSWR from "swr";
+import { fetcher } from "../lib/utils";
 
 export default function Dashboard(props) {
-  // const { user, loading } = useUser();
+  const { data } = useSWR("/api/user", fetcher);
   const [linkLabel, setLinkLabel] = React.useState("");
   const [linkUrl, setLinkUrl] = React.useState("");
 
+  React.useEffect(() => {
+    data && console.log(data);
+  }, [data]);
+
   const addLink = async () => {
-    console.log(linkLabel, linkUrl);
     const addResponse = await fetch("/api/add", {
       method: "POST",
       body: JSON.stringify({ label: linkLabel, url: linkUrl }),
@@ -26,10 +25,6 @@ export default function Dashboard(props) {
       setLinkUrl("");
     }
   };
-
-  React.useEffect(() => {
-    console.log(props.user);
-  }, []);
 
   return (
     <Protected>
@@ -52,20 +47,3 @@ export default function Dashboard(props) {
     </Protected>
   );
 }
-
-const magic = new Magic(process.env.MAGIC_SECRET_KEY);
-
-const handler = async (req: NowRequest, res: NowResponse, user) => {
-  const userMetadata = await magic.users.getMetadataByIssuer(user.issuer);
-  return userMetadata;
-};
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const cookies = parseCookies(context);
-  const user = await protectStatic(context.req, context.res, cookies, handler);
-  return {
-    props: {
-      user,
-    },
-  };
-};

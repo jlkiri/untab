@@ -31,21 +31,16 @@ export async function protectStatic(
   return next(request, response, user);
 }
 
-export async function protect(
-  request: NowRequest,
-  response: NowResponse,
-  next: Handler
-) {
+export async function authorize(cookies) {
   let user;
   try {
     user = await Iron.unseal(
-      Cookie.getAuthToken(request.cookies),
+      Cookie.getAuthToken(cookies),
       process.env.ENCRYPTION_SECRET,
       Iron.defaults
     );
   } catch (error) {
-    response.status(401).end();
+    throw error;
   }
-
-  next(request, response, user);
+  return user;
 }

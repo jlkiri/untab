@@ -1,12 +1,20 @@
 import { NowRequest, NowResponse } from "@vercel/node";
 import { Magic } from "@magic-sdk/admin";
 import Cookie from "../../lib/cookie";
-import { protect } from "../../lib/protect";
+import { authorize } from "../../lib/protect";
 
 const magic = new Magic(process.env.MAGIC_SECRET_KEY);
 
-const handler = async (req: NowRequest, res: NowResponse, user) => {
+export default async (req: NowRequest, res: NowResponse) => {
   if (req.method !== "POST") return res.status(405).end();
+
+  let user;
+
+  try {
+    user = authorize(req.cookies);
+  } catch {
+    res.status(401).end();
+  }
 
   await magic.users.logoutByIssuer(user.issuer);
 
@@ -14,6 +22,3 @@ const handler = async (req: NowRequest, res: NowResponse, user) => {
 
   res.end();
 };
-
-export default (req: NowRequest, res: NowResponse) =>
-  protect(req, res, handler);
