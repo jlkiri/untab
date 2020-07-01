@@ -1,4 +1,5 @@
 import useSWR from "swr";
+
 function fetcher(route) {
   return fetch(route)
     .then((r) => r.ok && r.json())

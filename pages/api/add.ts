@@ -6,7 +6,7 @@ import { User } from "../../types/user";
 const prisma = new PrismaClient();
 
 const handler = async (req: NowRequest, res: NowResponse, user: User) => {
-  const { label, url } = req.body;
+  const { label, url } = JSON.parse(req.body);
 
   try {
     const bookmark = await prisma.bookmark.create({
@@ -22,7 +22,9 @@ const handler = async (req: NowRequest, res: NowResponse, user: User) => {
     });
 
     res.json(bookmark);
-  } catch {
+  } catch (e) {
+    console.error(e);
+
     await prisma.disconnect();
     res.status(500).end();
   }

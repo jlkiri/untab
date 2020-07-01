@@ -6,10 +6,12 @@ const prisma = new PrismaClient();
 
 const handler = async (req: NowRequest, res: NowResponse) => {
   try {
-    const { id } = req.body;
+    const { id } = JSON.parse(req.body);
     await prisma.bookmark.delete({ where: { id } });
     res.status(201).end();
-  } catch {
+  } catch (e) {
+    console.error(e);
+
     await prisma.disconnect();
     res.status(500).end();
   }

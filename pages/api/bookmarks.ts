@@ -7,13 +7,15 @@ const prisma = new PrismaClient();
 const handler = async (req: NowRequest, res: NowResponse, user) => {
   try {
     const bookmarks = await prisma.bookmark.findMany({
-      where: { user: user.issuer },
+      where: { userId: user.issuer },
       orderBy: {
         createdAt: "asc",
       },
     });
     res.json(bookmarks);
-  } catch {
+  } catch (e) {
+    console.error(e);
+
     await prisma.disconnect();
     res.status(500).end();
   }
