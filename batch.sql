@@ -1,6 +1,5 @@
 create table users (
-  id varchar primary key not null unique,
-  name varchar
+  id varchar primary key not null unique
 );
 
 create table bookmarks (

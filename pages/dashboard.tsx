@@ -1,8 +1,10 @@
-import useAuth from "../hooks/useAuth";
+import { useUser } from "../hooks/useUser";
 import { useEffect } from "react";
+import LogoutButton from "../components/LogoutButton";
+import { Protected } from "../components/Protected";
 
 export default function Dashboard() {
-  const { user, loading } = useAuth();
+  const { user, loading } = useUser();
 
   useEffect(() => {
     if (!loading) {
@@ -11,8 +13,9 @@ export default function Dashboard() {
   }, [loading]);
 
   return (
-    <>
+    <Protected>
       <h1>Dashboard</h1>
-    </>
+      <LogoutButton />
+    </Protected>
   );
 }

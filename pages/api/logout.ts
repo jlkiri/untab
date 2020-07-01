@@ -1,15 +1,18 @@
 import { NowRequest, NowResponse } from "@vercel/node";
 import { Magic } from "@magic-sdk/admin";
+import Cookie from "../../lib/cookie";
 import { protect } from "../../lib/protect";
 
 const magic = new Magic(process.env.MAGIC_SECRET_KEY);
 
 const handler = async (req: NowRequest, res: NowResponse, user) => {
-  const userMetadata = await magic.users.getMetadataByIssuer(user.issuer);
+  if (req.method !== "POST") return res.status(405).end();
 
-  console.log(userMetadata);
+  await magic.users.logoutByIssuer(user.issuer);
 
-  res.json(userMetadata);
+  Cookie.clearCookie(res);
+
+  res.end();
 };
 
 export default (req: NowRequest, res: NowResponse) =>

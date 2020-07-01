@@ -1,18 +1,20 @@
 import useSWR from "swr";
+import { useLayoutEffect, useState } from "react";
+import { useRouter } from "next/router";
 
-function fetcher(route) {
-  return fetch(route)
-    .then((r) => r.ok && r.json())
-    .then((user) => user || null);
-}
+export function useAuth() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
 
-export default function useAuth() {
-  const { data: user, error, mutate } = useSWR("/api/user", fetcher);
-  const loading = user === undefined;
+  useLayoutEffect(() => {
+    if (typeof window !== "undefined") {
+      if (document.cookie && document.cookie.includes("authed")) {
+        setIsLoggedIn(true);
+      } else {
+        window.location.href = "/login";
+      }
+    }
+  }, []);
 
-  return {
-    user,
-    loading,
-    error,
-  };
+  return isLoggedIn;
 }

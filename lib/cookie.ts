@@ -15,6 +15,18 @@ function createCookie(name, data, options = {}) {
   });
 }
 
+function expireCookie(name, options = {}) {
+  return serialize(name, "", {
+    maxAge: 0,
+    expires: new Date(Date.now()),
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    httpOnly: true,
+    sameSite: "lax",
+    ...options,
+  });
+}
+
 function setTokenCookie(res, token) {
   res.setHeader("Set-Cookie", [
     createCookie(TOKEN_NAME, token),
@@ -22,8 +34,15 @@ function setTokenCookie(res, token) {
   ]);
 }
 
+function clearCookie(res) {
+  res.setHeader("Set-Cookie", [
+    expireCookie(TOKEN_NAME),
+    expireCookie("authed"),
+  ]);
+}
+
 function getAuthToken(cookies) {
   return cookies[TOKEN_NAME];
 }
 
-export default { setTokenCookie, getAuthToken };
+export default { setTokenCookie, clearCookie, getAuthToken };

@@ -20,7 +20,7 @@ export default function Login() {
     });
 
     if (authRequest.ok) {
-      router.push("/");
+      router.push("/dashboard");
     }
   };
 

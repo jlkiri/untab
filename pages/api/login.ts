@@ -27,7 +27,7 @@ export default async (req, res) => {
     console.log(isUserRegistered);
 
     if (!isUserRegistered) {
-      await prisma.user.create({ data: { id: user.issuer, name: "testuser" } });
+      await prisma.user.create({ data: { id: user.issuer } });
     }
   } catch {
     return res.status(401).end();
