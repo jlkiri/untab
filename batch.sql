@@ -7,5 +7,5 @@ create table bookmarks (
   url varchar not null,
   label varchar,
   created_at TIMESTAMPTZ default now(),
-  user_id varchar references users on delete cascade
+  user_id varchar not null references users on delete cascade
 );

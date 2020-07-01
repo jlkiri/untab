@@ -12,8 +12,8 @@ model Bookmark {
   id        Int       @default(autoincrement()) @id
   label     String?
   url       String
-  userId    String?   @map(name: "user_id")
-  user      User?     @relation(fields: [userId], references: [id])
+  userId    String    @map(name: "user_id")
+  user      User      @relation(fields: [userId], references: [id])
 
   @@map(name: "bookmarks")
 }

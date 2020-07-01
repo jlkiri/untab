@@ -1,8 +1,9 @@
 import { NowRequest, NowResponse } from "@vercel/node";
 import Iron from "@hapi/iron";
 import Cookie from "./cookie";
+import { User } from "../types/user";
 
-type Handler = (request: NowRequest, response: NowResponse, user: any) => void;
+type Handler = (request: NowRequest, response: NowResponse, user: User) => void;
 
 export async function protect(
   request: NowRequest,
