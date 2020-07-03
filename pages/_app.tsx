@@ -1,3 +1,4 @@
+import "./style.css";
 import { AppProps } from "next/app";
 import Link from "next/link";
 
