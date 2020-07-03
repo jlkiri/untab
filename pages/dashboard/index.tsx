@@ -9,6 +9,7 @@ import { authorize } from "../../lib/protect";
 import { parseCookies } from "nookies";
 import { RedirectError } from "../../lib/error";
 import { Page } from "../../components/Page";
+import { StyledLink } from "../../components/StyledLink";
 
 const Read = () => {
   const bms = useSWR("/api/bookmarks", fetcher);
@@ -34,11 +35,20 @@ export default function Dashboard(props) {
   }, [user]);
 
   return (
-    <Page title="dashboard">
-      <div>nothing here yet</div>
-      <Link href="/dashboard/add">
-        <a>Add</a>
-      </Link>
+    <Page title="Dashboard">
+      <h2 className="text-center">You have 30 bookmarks</h2>
+      <div className="px-6 flex justify-evenly">
+        <Link href="/dashboard/add">
+          <a>
+            <StyledLink>Add</StyledLink>
+          </a>
+        </Link>
+        <Link href="/dashboard/read">
+          <a>
+            <StyledLink>Read</StyledLink>
+          </a>
+        </Link>
+      </div>
     </Page>
   );
 }
