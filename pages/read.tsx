@@ -5,7 +5,7 @@ import { authorize } from "../lib/protect";
 import { parseCookies } from "nookies";
 import { getBookmarks } from "../lib/db";
 import { Bookmark } from "@prisma/client"; */
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import { fetcher } from "../lib/utils";
 
 /* type BookmarkProps = {
@@ -40,28 +40,38 @@ export const getServerSideProps: GetServerSideProps<BookmarkProps> = async (
 const Bookmarks = () => {
   const { data, error } = useSWR("/api/bookmarks", fetcher);
 
-  /* const removeBk = async (id) => {
+  const removeBookmark = async (id) => {
     const response = await fetch("api/delete", {
       method: "POST",
       body: JSON.stringify({ id }),
     });
 
     if (response.ok) {
-      console.log(`deleted ${id}`);
-      setBks(bks.filter((bk) => bk.id !== id));
+      mutate("/api/bookmarks");
+      console.log(`Deleted ${id}`);
     }
-  }; */
+  };
 
   if (!data || data.length === 0) return null;
 
   return (
     <div>
-      {data.map((bk) => (
+      {data.map((bookmark) => (
         <div>
-          {bk.label} : {bk.url}
-          {/* <button onClick={() => removeBk(bk.id)}>remove</button> */}
+          {bookmark.label} : {bookmark.url}
+          {
+            <button
+              onClick={() => {
+                removeBookmark(bookmark.id);
+              }}
+            >
+              remove
+            </button>
+          }
         </div>
       ))}
+      <button>REMOVE IT</button>
+      <button>Next</button>
     </div>
   );
 };
