@@ -1,3 +1,3 @@
 export const H1 = ({ children }) => (
-  <h1 className="m-auto text-3xl">{children}</h1>
+  <h1 className="m-auto font-extrabold text-5xl">{children}</h1>
 );
