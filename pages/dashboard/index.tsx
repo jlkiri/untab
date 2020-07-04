@@ -1,6 +1,4 @@
 import * as React from "react";
-import LogoutButton from "../../components/LogoutButton";
-import { Protected } from "../../components/Protected";
 import useSWR, { mutate } from "swr";
 import { fetcher } from "../../lib/utils";
 import Link from "next/link";
@@ -9,31 +7,21 @@ import { authorize } from "../../lib/protect";
 import { parseCookies } from "nookies";
 import { RedirectError } from "../../lib/error";
 import { Page } from "../../components/Page";
-import { StyledLink } from "../../components/StyledLink";
 import { Input } from "../../components/Input";
-
-const Read = () => {
-  const bms = useSWR("/api/bookmarks", fetcher);
-
-  const removeBookmark = async (id) => {
-    const response = await fetch("api/delete", {
-      method: "POST",
-      body: JSON.stringify({ id }),
-    });
-
-    if (response.ok) {
-      mutate("/api/bookmarks");
-      console.log(`Deleted ${id}`);
-    }
-  };
-};
 
 export default function Dashboard(props) {
   const user = useSWR("/api/user", fetcher);
+  const bms = useSWR("/api/bookmark_count", fetcher);
   const [linkLabel, setLinkLabel] = React.useState("");
   const [linkUrl, setLinkUrl] = React.useState("");
+  const [inputInvalid, setInputInvalid] = React.useState("");
 
   const addLink = async () => {
+    if (!/http/.test(linkUrl)) {
+      setInputInvalid("Please enter a valid URL");
+      return;
+    }
+
     const addResponse = await fetch("/api/add", {
       method: "POST",
       body: JSON.stringify({ label: linkLabel, url: linkUrl }),
@@ -41,8 +29,10 @@ export default function Dashboard(props) {
 
     if (addResponse.ok) {
       console.log("success");
+      mutate("/api/bookmark_count");
       setLinkLabel("");
       setLinkUrl("");
+      setInputInvalid("");
     }
   };
 
@@ -50,17 +40,17 @@ export default function Dashboard(props) {
     user.data && console.log(user.data);
   }, [user]);
 
+  if (!bms.data) return null;
+
   return (
     <Page title="Dashboard">
       <section className="py-6">
         <h2 className="font-bold text-2xl py-1 text-center">
           Add a URL to bookmarks
         </h2>
-        <div className="px-6 py-2 flex justify-evenly">
-          <button className="p-2 rounded-lg bg-purple-800 text-white font-bold">
-            Add +
-          </button>
+        <div className="md:space-x-6 space-y-4 md:space-y-0 px-6 py-2 flex flex-col justify-center md:flex-row">
           <Input
+            isValid={!inputInvalid}
             type="text"
             name="label"
             placeholder="Label"
@@ -68,22 +58,41 @@ export default function Dashboard(props) {
             onChange={(e) => setLinkLabel(e.target.value)}
           ></Input>
           <Input
+            isValid={!inputInvalid}
             type="text"
             name="url"
             placeholder="URL"
             value={linkUrl}
             onChange={(e) => setLinkUrl(e.target.value)}
           ></Input>
+          <button
+            onClick={addLink}
+            className="p-2 px-6 hover:bg-blue-600 duration-200 rounded-full text-white font-bold bg-blue-800"
+          >
+            Add
+          </button>
+        </div>
+        <div className="text-center text-red-600 font-bold">{inputInvalid}</div>
+      </section>
+      <section className="py-6 space-y-4 text-center">
+        <Link href="/dashboard/read">
+          <a className="inline-block text-xl justify-centertext-center font-bold p-4 px-8 sm:px-12 rounded-full bg-blue-800 text-white duration-100 hover:bg-blue-900">
+            Read saved bookmarks
+          </a>
+        </Link>
+        <div className="font-bold text-sm align-baseline text-gray-700">
+          <span>You have </span>
+          <Counter key={bms.data} amount={bms.data} />
+          <span> bookmarks</span>
         </div>
       </section>
-      <Link href="/dashboard/read">
-        <a>
-          <StyledLink>Read</StyledLink>
-        </a>
-      </Link>
     </Page>
   );
 }
+
+const Counter = ({ amount }) => {
+  return <span className="slide text-2xl inline-block">{amount}</span>;
+};
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const cookies = parseCookies(ctx);

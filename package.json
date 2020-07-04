@@ -19,7 +19,8 @@
     "nookies": "^2.3.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",
-    "swr": "^0.2.3"
+    "swr": "^0.2.3",
+    "valid-url": "^1.0.9"
   },
   "devDependencies": {
     "@prisma/cli": "^2.1.3",

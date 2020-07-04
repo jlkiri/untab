@@ -19,6 +19,24 @@ export const getBookmarks = async (user) => {
   }
 };
 
+export const getBookmarkCount = async (user) => {
+  const prisma = new PrismaClient();
+  try {
+    const bookmarks = await prisma.bookmark.count({
+      where: { userId: user.issuer },
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+    return bookmarks;
+  } catch (e) {
+    console.error(e);
+
+    await prisma.disconnect();
+    throw e;
+  }
+};
+
 export const addBookmark = async (label, url, user) => {
   const prisma = new PrismaClient();
   try {
