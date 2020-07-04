@@ -21,6 +21,7 @@ export default function Login() {
 
     if (authRequest.ok) {
       console.log("AUTH OK");
+      router.reload();
     }
   };
 

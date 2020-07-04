@@ -96,9 +96,11 @@ const Counter = ({ amount }) => {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const cookies = parseCookies(ctx);
+  console.log(cookies);
   try {
-    await authorize(cookies);
-  } catch {
+    const user = await authorize(cookies);
+    console.log("user", user);
+  } catch (e) {
     console.log("FAIL");
     if (process.env.NODE_ENV === "production") {
       throw new RedirectError(302, "/login");

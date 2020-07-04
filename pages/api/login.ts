@@ -42,6 +42,6 @@ export default async (req, res: NowResponse) => {
 
   Cookie.setTokenCookie(res, token);
 
-  res.setHeader("Location", "/dashboard");
-  res.status(302).end();
+  res.writeHead(302, { Location: "/dashboard" });
+  res.end();
 };
