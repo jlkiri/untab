@@ -2,12 +2,13 @@ import { Magic } from "@magic-sdk/admin";
 import Iron from "@hapi/iron";
 import { PrismaClient } from "@prisma/client";
 import Cookie from "../../lib/cookie";
+import { NowResponse } from "@vercel/node";
 
 const prisma = new PrismaClient();
 
 const magic = new Magic(process.env.MAGIC_SECRET_KEY);
 
-export default async (req, res) => {
+export default async (req, res: NowResponse) => {
   if (req.method !== "POST") return res.status(405).end();
 
   let user;
@@ -41,5 +42,6 @@ export default async (req, res) => {
 
   Cookie.setTokenCookie(res, token);
 
-  res.end();
+  res.setHeader("Location", "/dashboard");
+  res.status(302).end();
 };

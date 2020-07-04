@@ -26,7 +26,16 @@ export default function Read() {
 
   if (!bookmarks) return null;
 
-  if (bookmarks.length === 0) return <div>You have no bookmarks!</div>;
+  if (bookmarks.length === 0)
+    return (
+      <Page title="Dashboard">
+        <section className="py-6">
+          <div className="text-center text-2xl font-bold">
+            You have no bookmarks!
+          </div>
+        </section>
+      </Page>
+    );
 
   const url = bookmarks[currentBmk].url;
   const label = bookmarks[currentBmk].label;
@@ -47,6 +56,7 @@ export default function Read() {
             onClick={() => removeBookmark(id)}
             className="text-center font-bold p-4 px-12 rounded-full bg-blue-800 text-white duration-100 hover:bg-blue-900"
             href={url}
+            target="_blank"
           >
             Read
           </a>

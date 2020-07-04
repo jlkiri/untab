@@ -40,7 +40,7 @@ export default function Dashboard(props) {
     user.data && console.log(user.data);
   }, [user]);
 
-  if (!bms.data) return null;
+  if (bms.data == null) return null;
 
   return (
     <Page title="Dashboard">
@@ -99,6 +99,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
     await authorize(cookies);
   } catch {
+    console.log("FAIL");
     if (process.env.NODE_ENV === "production") {
       throw new RedirectError(302, "/login");
     } else {

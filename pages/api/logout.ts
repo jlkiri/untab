@@ -11,7 +11,7 @@ export default async (req: NowRequest, res: NowResponse) => {
   let user;
 
   try {
-    user = authorize(req.cookies);
+    user = await authorize(req.cookies);
   } catch {
     res.status(401).end();
   }
