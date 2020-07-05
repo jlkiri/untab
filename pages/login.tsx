@@ -18,8 +18,6 @@ export default function Login() {
       process.env.NEXT_PUBLIC_MAGIC_PUB_KEY
     ).auth.loginWithMagicLink({ email });
 
-    console.log(did);
-
     const authRequest = await fetch("/api/login", {
       method: "POST",
       headers: { Authorization: `Bearer ${did}` },

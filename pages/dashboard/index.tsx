@@ -10,7 +10,6 @@ import { Page } from "../../components/Page";
 import { Input } from "../../components/Input";
 
 export default function Dashboard(props) {
-  const user = useSWR("/api/user", fetcher);
   const bms = useSWR("/api/bookmark_count", fetcher);
   const [linkLabel, setLinkLabel] = React.useState("");
   const [linkUrl, setLinkUrl] = React.useState("");
@@ -20,7 +19,7 @@ export default function Dashboard(props) {
   const addLink = async () => {
     setIsBusy(true);
 
-    if (!/http/.test(linkUrl)) {
+    if (!/^http/.test(linkUrl)) {
       setInputInvalid("Please enter a valid URL");
       setIsBusy(false);
       return;

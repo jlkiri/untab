@@ -25,6 +25,15 @@ const About = () => {
           Keep your tabs clean and eliminate distractions from your browsing
           life.
         </p>
+        <p className="text-center text-lg mt-4">
+          By{" "}
+          <a
+            className="text-blue-600 underline"
+            href="https://twitter.com/virtualkirill"
+          >
+            @virtualkirill
+          </a>
+        </p>
       </section>
     </Page>
   );

@@ -1,10 +1,8 @@
 import { Magic } from "@magic-sdk/admin";
 import Iron from "@hapi/iron";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "../../lib/prisma_client";
 import Cookie from "../../lib/cookie";
 import { NowResponse } from "@vercel/node";
-
-const prisma = new PrismaClient();
 
 const magic = new Magic(process.env.MAGIC_SECRET_KEY);
 
