@@ -9,8 +9,10 @@ import { fetcher } from "../../lib/utils";
 
 export default function Read() {
   const { data: bookmarks } = useSWR("/api/bookmarks", fetcher);
+  const [isBusy, setIsBusy] = React.useState(false);
 
   const removeBookmark = async (id) => {
+    setIsBusy(true);
     const response = await fetch("/api/delete", {
       method: "POST",
       body: JSON.stringify({ id }),
@@ -19,6 +21,7 @@ export default function Read() {
     if (response.ok) {
       await mutate("/api/bookmarks");
       console.log(`Deleted ${id}`);
+      setIsBusy(false);
     }
   };
 
@@ -51,7 +54,10 @@ export default function Read() {
         </div>
         <div className="p-2 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center">
           <a
-            onClick={() => removeBookmark(id)}
+            onClick={() => {
+              if (isBusy) return;
+              removeBookmark(id);
+            }}
             className="text-center font-bold p-4 px-12 rounded-full bg-blue-800 text-white duration-100 hover:bg-blue-900"
             href={url}
             target="_blank"
@@ -59,6 +65,7 @@ export default function Read() {
             Read
           </a>
           <button
+            disabled={isBusy}
             className="font-bold p-4 px-12 rounded-full bg-red-700 text-white duration-100 hover:bg-red-500"
             onClick={() => removeBookmark(id)}
           >

@@ -16,7 +16,7 @@ export default function Home() {
           }}
         ></script>
       </Head>
-      <main className="flex pt-24 flex-col-reverse items-center md:px-24 xl:items-start xl:flex-row xl:px-40 justify-between">
+      <main className="limit-lg flex pt-24 flex-col-reverse items-center md:px-24 xl:items-start xl:flex-row xl:px-40 justify-between">
         <div>
           <WelcomeImg />
         </div>

@@ -29,6 +29,10 @@
   opacity: 0.75;
 }
 
+.limit-lg {
+  @apply max-w-screen-xl box-content;
+}
+
 .logo {
   background: linear-gradient(to right, rgb(27, 144, 223), rgb(135, 72, 207));
   background-clip: text;
