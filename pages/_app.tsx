@@ -6,18 +6,16 @@ import * as React from "react";
 const Header = ({ isLoggedIn }) => {
   return (
     <header className="bg-white shadow-sm flex justify-between">
-      <div className="py-4">
-        <div className="bg-black w-8 h-8 mx-4"></div>
-      </div>
-      <nav>
+      <div className="py-2 logo font-extrabold text-3xl ml-6">Untab</div>
+      <nav className="flex justify-center w-full md:w-auto">
         <Link passHref href="/dashboard">
           <a className="inline-block py-4 px-2 sm:px-8 font-bold text-xl sm:text-2xl hover:opacity-75 hover:text-blue-500">
-            <span className="text-blue-700">d</span>ashboard
+            <span className="text-purple-700">d</span>ashboard
           </a>
         </Link>
         <Link href="/about">
           <a className="inline-block py-4 px-2 sm:px-8 font-bold text-xl sm:text-2xl hover:opacity-75 hover:text-blue-500">
-            <span className="text-blue-700">a</span>bout
+            <span className="text-purple-700">a</span>bout
           </a>
         </Link>
         {isLoggedIn ? (
@@ -40,6 +38,7 @@ const Header = ({ isLoggedIn }) => {
 
 export const AuthContext = React.createContext({
   onLogout: () => {},
+  onLogin: () => {},
   isLoggedIn: false,
 });
 
@@ -47,6 +46,7 @@ const App = ({ Component, pageProps }: AppProps) => {
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
 
   const onLogout = () => setIsLoggedIn(false);
+  const onLogin = () => setIsLoggedIn(true);
 
   React.useEffect(() => {
     if (typeof window !== "undefined") {
@@ -54,10 +54,10 @@ const App = ({ Component, pageProps }: AppProps) => {
         setIsLoggedIn(true);
       }
     }
-  });
+  }, [isLoggedIn]);
 
   return (
-    <AuthContext.Provider value={{ onLogout, isLoggedIn }}>
+    <AuthContext.Provider value={{ onLogout, onLogin, isLoggedIn }}>
       <Header isLoggedIn={isLoggedIn} />
       <Component {...pageProps} />
     </AuthContext.Provider>

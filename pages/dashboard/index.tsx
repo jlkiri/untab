@@ -15,10 +15,14 @@ export default function Dashboard(props) {
   const [linkLabel, setLinkLabel] = React.useState("");
   const [linkUrl, setLinkUrl] = React.useState("");
   const [inputInvalid, setInputInvalid] = React.useState("");
+  const [isBusy, setIsBusy] = React.useState(false);
 
   const addLink = async () => {
+    setIsBusy(true);
+
     if (!/http/.test(linkUrl)) {
       setInputInvalid("Please enter a valid URL");
+      setIsBusy(false);
       return;
     }
 
@@ -33,6 +37,7 @@ export default function Dashboard(props) {
       setLinkLabel("");
       setLinkUrl("");
       setInputInvalid("");
+      setIsBusy(false);
     }
   };
 
@@ -66,6 +71,7 @@ export default function Dashboard(props) {
             onChange={(e) => setLinkUrl(e.target.value)}
           ></Input>
           <button
+            disabled={isBusy}
             onClick={addLink}
             className="p-2 px-6 hover:bg-blue-600 duration-200 rounded-full text-white font-bold bg-blue-800"
           >
@@ -83,7 +89,7 @@ export default function Dashboard(props) {
         <div className="font-bold text-sm align-baseline text-gray-700">
           <span>You have </span>
           <Counter key={bms.data} amount={bms.data} />
-          <span> bookmarks</span>
+          <span> bookmark{bms.data === 1 ? "" : "s"}</span>
         </div>
       </section>
     </Page>

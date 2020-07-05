@@ -9,7 +9,6 @@ import { fetcher } from "../../lib/utils";
 
 export default function Read() {
   const { data: bookmarks } = useSWR("/api/bookmarks", fetcher);
-  const [currentBmk, setCurrentBmk] = React.useState(0);
 
   const removeBookmark = async (id) => {
     const response = await fetch("/api/delete", {
@@ -20,7 +19,6 @@ export default function Read() {
     if (response.ok) {
       await mutate("/api/bookmarks");
       console.log(`Deleted ${id}`);
-      setCurrentBmk(currentBmk + 1);
     }
   };
 
@@ -37,15 +35,15 @@ export default function Read() {
       </Page>
     );
 
-  const url = bookmarks[currentBmk].url;
-  const label = bookmarks[currentBmk].label;
-  const id = bookmarks[currentBmk].id;
+  const url = bookmarks[0].url;
+  const label = bookmarks[0].label;
+  const id = bookmarks[0].id;
 
   return (
     <Page title="Dashboard">
       <section className="space-y-4 py-6">
         <div className="text-center font-bold text-blue-700">
-          {bookmarks.length} bookmarks
+          {bookmarks.length} bookmark{bookmarks.length === 1 ? "" : "s"}
         </div>
         <div className=" text-center">
           <h2 className="font-bold text-xl">{label}</h2>

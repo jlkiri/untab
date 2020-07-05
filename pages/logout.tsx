@@ -12,13 +12,18 @@ export default function Logout() {
         method: "POST",
       });
       onLogout();
-      router.push("/");
     }
   };
 
   React.useEffect(() => {
     logout();
   }, []);
+
+  React.useEffect(() => {
+    if (!isLoggedIn) {
+      router.push("/");
+    }
+  }, [isLoggedIn]);
 
   return null;
 }

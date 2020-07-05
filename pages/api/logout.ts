@@ -18,7 +18,13 @@ export default async (req: NowRequest, res: NowResponse) => {
 
   await magic.users.logoutByIssuer(user.issuer);
 
+  console.log("Successful logout");
+
+  console.log("reqheaders", req.headers);
+
   Cookie.clearCookie(res);
+
+  console.log(res.getHeader("Set-Cookie"));
 
   res.end();
 };

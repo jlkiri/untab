@@ -3,11 +3,13 @@ import { serialize } from "cookie";
 const TOKEN_NAME = "api_token";
 const MAX_AGE = 60 * 60 * 2;
 
+const prod = process.env.NODE_ENV === "production";
+
 function createCookie(name, data, options = {}) {
   return serialize(name, data, {
     maxAge: MAX_AGE,
     expires: new Date(Date.now() + MAX_AGE * 1000),
-    secure: process.env.NODE_ENV === "production",
+    secure: false,
     path: "/",
     httpOnly: true,
     sameSite: "lax",
@@ -19,7 +21,7 @@ function expireCookie(name, options = {}) {
   return serialize(name, "", {
     maxAge: 0,
     expires: new Date(Date.now()),
-    secure: process.env.NODE_ENV === "production",
+    secure: false,
     path: "/",
     httpOnly: true,
     sameSite: "lax",

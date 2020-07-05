@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+/* purgecss start ignore */
+
 #__next {
   position: absolute;
   top: 0;
@@ -14,7 +16,54 @@
   animation: slideabove 500ms linear;
 }
 
-/* purgecss start ignore */
+.welcome-image {
+  width: 300px;
+  height: 200px;
+}
+
+.gradient-button {
+  background: linear-gradient(to right, rgb(27, 144, 223), rgb(135, 72, 207));
+}
+
+.gradient-button:hover {
+  opacity: 0.75;
+}
+
+.logo {
+  background: linear-gradient(to right, rgb(27, 144, 223), rgb(135, 72, 207));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: none;
+}
+
+@media screen and (min-width: 375px) {
+  .logo {
+    transform: scale(0.7);
+    display: block;
+  }
+}
+
+@media screen and (min-width: 640px) {
+  .logo {
+    transform: scale(1);
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .welcome-image {
+    width: 500px;
+    height: 380px;
+  }
+}
+
+.email {
+  min-width: 305px;
+}
+
+[disabled] {
+  @apply opacity-25;
+}
 
 @keyframes slideabove {
   0% {
