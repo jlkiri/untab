@@ -28,22 +28,25 @@ export default function Dashboard(props) {
 
     const addResponse = await fetch("/api/add", {
       method: "POST",
-      body: JSON.stringify({ label: linkLabel, url: linkUrl }),
+      body: JSON.stringify({ label: linkLabel, url: linkUrl, count: bms.data }),
     });
 
     if (addResponse.ok) {
-      console.log("success");
-      mutate("/api/bookmark_count");
+      await mutate("/api/bookmark_count");
+
+      const data = await addResponse.json();
+
       setLinkLabel("");
       setLinkUrl("");
       setInputInvalid("");
+
+      if (data.isLimit) {
+        return;
+      }
+
       setIsBusy(false);
     }
   };
-
-  React.useEffect(() => {
-    user.data && console.log(user.data);
-  }, [user]);
 
   if (bms.data == null) return null;
 
@@ -71,7 +74,7 @@ export default function Dashboard(props) {
             onChange={(e) => setLinkUrl(e.target.value)}
           ></Input>
           <button
-            disabled={isBusy}
+            disabled={isBusy || bms.data >= 50}
             onClick={addLink}
             className="p-2 px-6 hover:bg-blue-600 duration-200 rounded-full text-white font-bold bg-blue-800"
           >
@@ -102,12 +105,9 @@ const Counter = ({ amount }) => {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const cookies = parseCookies(ctx);
-  console.log(cookies);
   try {
     const user = await authorize(cookies);
-    console.log("user", user);
   } catch (e) {
-    console.log("FAIL");
     if (process.env.NODE_ENV === "production") {
       throw new RedirectError(302, "/login");
     } else {

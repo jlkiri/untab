@@ -19,6 +19,25 @@ export const getBookmarks = async (user) => {
   }
 };
 
+export const cleanupBookmarks = async () => {
+  const prisma = new PrismaClient();
+  try {
+    const bookmarks = await prisma.bookmark.deleteMany({
+      where: {
+        createdAt: {
+          lte: new Date((new Date().getTime() / 1000 - 300) * 1000),
+        },
+      },
+    });
+    return bookmarks;
+  } catch (e) {
+    console.error(e);
+
+    await prisma.disconnect();
+    throw e;
+  }
+};
+
 export const getBookmarkCount = async (user) => {
   const prisma = new PrismaClient();
   try {

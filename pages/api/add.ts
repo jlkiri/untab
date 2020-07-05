@@ -11,11 +11,11 @@ export default async (req: NowRequest, res: NowResponse) => {
     res.status(401).end();
   }
 
-  const { label, url } = JSON.parse(req.body);
+  const { label, url, count } = JSON.parse(req.body);
 
   try {
     const bookmark = await addBookmark(label, url, user);
-    res.json(bookmark);
+    res.json({ bookmark, isLimit: count === 49 });
   } catch {
     res.status(500).end();
   }

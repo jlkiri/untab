@@ -19,13 +19,9 @@ export default async (req, res: NowResponse) => {
 
     user = await magic.users.getMetadataByToken(did);
 
-    console.log(user);
-
     const isUserRegistered = await prisma.user.findOne({
       where: { id: user.issuer },
     });
-
-    console.log(isUserRegistered);
 
     if (!isUserRegistered) {
       await prisma.user.create({ data: { id: user.issuer } });

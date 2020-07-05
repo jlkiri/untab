@@ -20,7 +20,6 @@ export default function Read() {
 
     if (response.ok) {
       await mutate("/api/bookmarks");
-      console.log(`Deleted ${id}`);
       setIsBusy(false);
     }
   };
