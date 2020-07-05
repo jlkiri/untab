@@ -1,0 +1,13 @@
+name: Scheduler
+
+on:
+  schedule:
+    - cron: "0 */1 * * *"
+
+jobs:
+  request:
+    name: Request
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping
+        run: curl https://untab.vercel.app/api/cleanup
